@@ -1,3 +1,9 @@
 TODO
 1. Undo function
     -> Specify the id of the user
+
+
+NOTE:
+2. Backup databse
+    - Cretae a backup certificate
+
