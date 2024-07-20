@@ -7,11 +7,6 @@ AS
 BEGIN
     DECLARE @DrID VARCHAR(6)
     SET @DrID = ORIGINAL_LOGIN()
-    IF (@DrID IS NULL) -- IF no id means new records
-    BEGIN 
-        PRINT 'Error Encountered !! There is no any records yet!!'
-    END
-    ELSE
     BEGIN
         -- Existing records
         PRINT 'Existing Doctor Record'

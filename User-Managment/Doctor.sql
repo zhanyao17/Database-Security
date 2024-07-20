@@ -10,7 +10,6 @@ CREATE LOGIN D2 with PASSWORD ='DR2@1234'; -- creat new user
 -- CREATE USER D2 for LOGIN D2;
 
 
-
 /* Grant permission */
 GRANT EXECUTE on dbo.DR_ManageDoctorRecords to Doctor -- procedure
 
