@@ -1,0 +1,5 @@
+Features
+- Auditing on user login 
+- Auditing on DCL
+- Perform grant, deny, revoke
+- Immediate recovery purpose
