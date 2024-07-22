@@ -1,9 +1,15 @@
 TODO
 1. Undo function
     -> Specify the id of the user
+2. DCL Auditting
 
-
-NOTE:
+CHECK:
 2. Backup databse
-    - Cretae a backup certificate
+    - We use build in job (sp_add_jobstep) to create backup job so that we can capture the backup history 
+    - Schedule action we use crontab since in docker we can't use sqlagent.  
+    - Things can achieve:
+        -> able to automatic run the backup base on a given time / duration
+        -> able to capture the backup history 
 
+Docker
+-> /opt/mssql-tools/bin/sqlcmd -S 127.0.0.1,1434 -U SA -P 'zhanyao88' -i /opt/mssql/backup/test_sch_backup.sql
