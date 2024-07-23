@@ -2,7 +2,7 @@
 Performing security features on MSSQL (Sql server)
 
 # Step for setting up
-Run files followed with this steps ...
+Run files follow with this steps ...
 1. Pre-process 
 2. Perform_data_secure (perform_tde)
 3. Function (all)
