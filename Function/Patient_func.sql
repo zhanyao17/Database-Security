@@ -1,3 +1,6 @@
+/*
+This file consis all the procedure and view that had been precreated for Patient roles
+*/
 
 /* Manage own pii */
 CREATE OR ALTER PROCEDURE P_Manage_PII 

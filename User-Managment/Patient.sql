@@ -1,3 +1,13 @@
+/* 
+This file consist all the permission granting and action can be perform by this roles
+#TAKE NOTES
+Sub-headings
+1. Create new login (run using sa account)
+2. Grant permission (run using sa account)
+3. Action (run using D1)
+*/
+
+
 /* Create login and user for patient roles */
 CREATE Role Patient; -- Create role
 CREATE LOGIN P1 with PASSWORD ='P_1@1234'; -- creat new user

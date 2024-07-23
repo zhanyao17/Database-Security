@@ -1,4 +1,7 @@
-/* Create table store audit detaisl */
+/* 
+    Create table store audit details 
+    - Create a trigger for patient table to perform soft delete and undo action
+*/
 CREATE TABLE.[AuditLog_Patient](
     [Log ID] [int] IDENTITY(1,1) NOT NULL primary key,
     [Log DateTime] [datetime] Default GETDATE(), 
@@ -43,6 +46,10 @@ BEGIN
     WHERE PID IN (SELECT PID FROM deleted);
 END;
 GO
+
+
+
+
 
 /* Drop table */
 -- drop TRIGGER [PatientDataChanges]

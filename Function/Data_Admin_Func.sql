@@ -1,6 +1,6 @@
--- Visualize
-/*diagnosis, doctor, patient */
--- select * from patient;
+/*
+ This file consis all the procedure and view that had been precreated for data admin roles
+*/
 
 /* ------------------------- Exec ---------------------------- */
 
@@ -180,7 +180,11 @@ BEGIN
     ELSE
     BEGIN
         PRINT 'Records will be deleted in a while...'
-        DELETE FROM Doctor
+        -- DELETE FROM Doctor
+        -- WHERE DrID = @DrID
+        -- Perform manual soft delete
+        UPDATE Doctor
+        set RowStatus = 0
         WHERE DrID = @DrID
     END
 END
@@ -219,17 +223,20 @@ BEGIN
         @DName = DName,
         @DPhone = DPhone,
         @RowStatus = RowStatus
-    FROM AuditLog_Doctor
-    ORDER BY [Log ID] DESC
+        -- @ValidFrom = ValidFrom,
+        -- @ValidTo = CONVERT(DATETIME2, '9999-12-31 23:59:59.9999999')
+    FROM dbo.DoctorHistory
+    ORDER BY ValidTo DESC
     PRINT 'Record had been reverted !!'
     UPDATE [dbo].[Doctor]
     SET [DName] = @DName,
         [DPhone] = @DPhone,
         [RowStatus] = @RowStatus
+        -- [ValidFrom] = @ValidFrom,
+        -- [ValidTo] = @ValidTo
     WHERE [DrID] = @DrID;
 END
 GO
-
 
 
 
@@ -250,16 +257,27 @@ GO
 
 /* View for active patient */
 CREATE OR ALTER VIEW DA_Active_Patient as 
-    SELECT PID, PName, PPhone
+    SELECT PID, 
+        'Anonymous_' + CAST(ABS(CHECKSUM(PName)) % 1000 AS NVARCHAR) as Anonymous_Patient,
+        HASHBYTES('SHA2_256',PPhone) as Protected_PPhone
     from Patient
     WHERE RowStatus = 1
 GO
 
 /* View for in-active patient */
 CREATE OR ALTER VIEW DA_Inactive_Patient as 
-    SELECT PID, PName, PPhone
+    SELECT PID, 
+        'Anonymous_' + CAST(ABS(CHECKSUM(PName)) % 1000 AS NVARCHAR) as Anonymous_Patient,
+        HASHBYTES('SHA2_256',PPhone) as Protected_PPhone
     from Patient
     WHERE RowStatus = 0
+GO
+
+/* View diagnosis table */
+CREATE or ALTER VIEW DA_Diagnosis as 
+    SELECT DiagID, PatientID, DoctorID, DiagnosisDate,
+        'Diagnosis_' + CAST(ABS(CHECKSUM(Diagnosis)) % 1000 AS NVARCHAR) as Anonymous_Diagnosis
+    from Diagnosis;
 GO
 
 
@@ -268,5 +286,3 @@ GO
 -- EXEC DA_ManagePatientRecords @PName = 'New';
 -- EXEC DA_DeletePatientRecords @PID = 'P10'
 -- EXEC DA_ManageDoctorRecords @DrID='D9', @DPhone='810-123-4567';
-
-

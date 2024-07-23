@@ -36,7 +36,7 @@ DROP COLUMN PaymentCardNo;
 ALTER TABLE [dbo].[Patient]
 ADD PaymentCardNo VARBINARY(MAX);
 
--- Adding new columns for achieve soft delete
+-- Adding new columns for achieve soft delete [NOTES: run one by one]
 ALTER TABLE Patient
 ADD RowStatus INT DEFAULT 1;
 GO
@@ -50,6 +50,13 @@ ALTER TABLE Doctor
 ADD RowStatus INT DEFAULT 1;
 
 UPDATE Doctor
+SET RowStatus = 1
+WHERE RowStatus IS NULL;
+
+ALTER TABLE Diagnosis
+ADD RowStatus INT DEFAULT 1;
+
+UPDATE Diagnosis
 SET RowStatus = 1
 WHERE RowStatus IS NULL;
 

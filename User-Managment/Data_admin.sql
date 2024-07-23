@@ -1,3 +1,12 @@
+/* 
+This file consist all the permission granting and action can be perform by this roles
+#TAKE NOTES
+Sub-headings
+1. Create new login (run using sa account)
+2. Grant permission (run using sa account)
+3. Action (run using DA_1)
+*/
+
 /* Create new login */
 use MedicalInfoSystem;
 CREATE LOGIN DA_1 with PASSWORD ='DA1@1234';
@@ -7,9 +16,14 @@ ALTER role Data_Admin add member DA_1
 
 
 /* Grant permission */
+-- Adding roles
 GRANT ALTER ANY ROLE TO Data_Admin; -- Allow adding new role
 GRANT VIEW DEFINITION TO Data_Admin; -- Allow viwew all roles
 GRANT ALTER ANY USER TO Data_Admin;  -- Allow assigning role to new user
+
+-- Perform permission managment
+GRANT CONTROL ON OBJECT::[dbo].[Doctor] to Data_Admin
+GRANT CONTROL ON OBJECT::[dbo].[Patient] to Data_Admin
 
 -- Patient table
 GRANT SELECT, insert, update, delete on Patient to Data_Admin; 
@@ -25,12 +39,18 @@ GRANT EXECUTE on dbo.DA_ManageDoctorRecords to Data_Admin -- procedure
 GRANT select on DA_Active_Doctor to Data_Admin -- view active doctor
 GRANT select on DA_Inactive_Doctor to Data_Admin -- view in-active doctor
 
+-- Diagnosis table
+GRANT SELECT on Diagnosis to Data_Admin;
+Deny Select on Diagnosis(Diagnosis) to Data_Admin
+
+-- Diagnosis table
+Grant SELECT on DA_Diagnosis to Data_Admin
 
 -- Exec
 GRANT EXECUTE on dbo.DA_ManagePatientRecords to Data_Admin; -- Manage patient records
 GRANT EXECUTE on dbo.DA_DeletePatientRecords to Data_Admin; -- Delete patient records
 GRANT EXECUTE on dbo.DA_ManageDoctorRecords to Data_Admin; -- Manage doctor records
-GRANT EXECUTE on dbo.DA_DeleteDoctorRecords to Data_Admin; -- Manage doctor records
+GRANT EXECUTE on dbo.DA_DeleteDoctorRecords to Data_Admin; -- Delete doctor records
 
 
 /* Action */
@@ -70,6 +90,8 @@ select * from DA_Inactive_Doctor; -- inactive doctor
 select * from DA_Active_Patient; -- active patient
 select * from DA_Inactive_Patient -- inactive patient
 
+-- View diagnosis records
+select * from DA_Diagnosis
 
 /* View all role */
 SELECT roles.[name] as role_name, members.[name] as user_name
@@ -80,10 +102,3 @@ INNER JOIN sys.database_principals members
 ON database_role_members.member_principal_id = members.principal_id
 WHERE roles.name in ('Data_Admin','Doctor','Patient')
 GO
-
--- others
-
--- select * from Doctor
--- select * from AuditLog_Patient ORDER by [Log ID] desc
-
--- audit

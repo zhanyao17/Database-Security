@@ -1,3 +1,7 @@
+/*
+This file consis all the procedure and view that had been precreated for doctor roles
+*/
+
 
 /* Modify doctor records*/
 CREATE OR ALTER PROCEDURE DR_ManageDoctorRecords
@@ -126,6 +130,31 @@ BEGIN
 END
 GO
 
+/* Undo diagnosis */
+CREATE OR ALTER PROCEDURE DR_UndoDiagnosis
+as 
+BEGIN
+    DECLARE @DiagID INT, @PatientID varchar(6), @DoctorID VARCHAR(6), @DiagnosisDate datetime, @Diagnosis VARCHAR(max)
+    SELECT 
+        @DiagID = DiagID,
+        @PatientID = PatientID,
+        @DoctorID = DoctorID,
+        @DiagnosisDate = DiagnosisDate,
+        @Diagnosis = Diagnosis
+    FROM cdc.dbo_Diagnosis_CT
+    WHERE DoctorID = ORIGINAL_LOGIN()
+    ORDER BY __$start_lsn DESC
+    OFFSET 1 ROWS
+    FETCH NEXT 1 ROW ONLY;
+    PRINT 'Record had been reverted !!' 
+    UPDATE [dbo].[Diagnosis]
+    SET [PatientID] = @PatientID,
+        [DoctorID] = @DoctorID,
+        [DiagnosisDate] = @DiagnosisDate,
+        [Diagnosis] = @Diagnosis
+    WHERE [DiagID] = @DiagID;
+END
+GO
 
 
 -- Capture the SID (Security Identifier) of the current login user

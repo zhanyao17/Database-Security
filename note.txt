@@ -1,7 +1,8 @@
 TODO
-1. Undo function
-    -> Specify the id of the user
-2. DCL Auditting
+1. Perform recovery on the diagnosis table
+2. Add admin can view diagnosis however most of the records must be hide
+3. Doctor can perform undo action on the diagnosis part
+
 
 CHECK:
 2. Backup databse
