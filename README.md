@@ -14,6 +14,6 @@ Run files follow with this steps ...
 
 # Todo
 1. Data protection
-2. Permission managment
+2. Permission management
 3. Auditting
 4. Backup and restore (sir say need to mention under data protection?? 凸)

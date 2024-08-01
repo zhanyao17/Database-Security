@@ -36,9 +36,9 @@ CREATE OR ALTER VIEW View_Doctor_personal AS
     SELECT 
         DrID, 
         DName, 
-        CONVERT(VARCHAR, DECRYPTBYKEY(DPhone)) AS DPhone
+        CONVERT(VARCHAR, DECRYPTBYKEY(DPhone)) AS DPhone  -- NOTE: perform decryption using symmetric
     FROM Doctor
-    WHERE DrID = ORIGINAL_LOGIN();
+    WHERE DrID = ORIGINAL_LOGIN(); 
 GO
 
 

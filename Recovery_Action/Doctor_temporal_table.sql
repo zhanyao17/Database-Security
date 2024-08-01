@@ -27,4 +27,3 @@ DELETE FROM dbo.DoctorHistory; go
 
 
 /*  View history table */
--- select * from dbo.DoctorHistory order by ValidTo desc

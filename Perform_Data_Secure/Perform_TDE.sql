@@ -4,8 +4,8 @@ will be used in the encrypting patient(paymentcardno) & doctor(contact)
 */
 -- Master key passwords: DEMOSU#12345&SAMI#SU
 USE master;
-CREATE MASTER KEY ENCRYPTION BY PASSWORD = 'QWEqwe!@#123';
-CREATE CERTIFICATE CertForTDE WITH SUBJECT = 'CertForTDE';
+CREATE MASTER KEY ENCRYPTION BY PASSWORD = 'QWEqwe!@#123'; -- master key
+CREATE CERTIFICATE CertForTDE WITH SUBJECT = 'CertForTDE'; -- cert
 
 
 
@@ -28,49 +28,30 @@ INNER JOIN sys.certificates b ON a.encryptor_thumbprint = b.thumbprint
 -- payment card no column [Asymetric key]
 USE MedicalInfoSystem;
 Create master key encryption by password = 'QwErTy12345!@#$%' -- maaster key encryption key (DEK)
-CREATE ASYMMETRIC KEY AsymKey_paymentCarNo WITH ALGORITHM = RSA_2048 -- asymmetric ke
+CREATE ASYMMETRIC KEY AsymKey_paymentCarNo WITH ALGORITHM = RSA_2048 --NOTE: asymmetric ke
 
 -- contact column [Symetric key]
 USE MedicalInfoSystem;
 CREATE certificate CertForCLE with SUBJECT = 'CertForCLE'
-CREATE SYMMETRIC KEY SimKey_contact1
+CREATE SYMMETRIC KEY SimKey_contact1 -- NOTE: Symmetric key for doctor contact no 
 WITH ALGORITHM = AES_256 ENCRYPTION BY CERTIFICATE CertForCLE
 
 
-
-/* for own use pls ignore this */
--- -- Demo on how to encrypt and decrypt
--- -- EncryptByAsymKey(AsymKey_ID('AsymKey_paymentCarNo'),'JohnPwd')
-
-
--- -- Draft
--- select * from Doctor
-
--- -- DECLARE @PaymentCardNo varchar(20) = 'alishdf';
-
--- -- DECLARE @EncryptedPaymentCardNo VARBINARY(MAX);
-
--- -- -- SET @EncryptedPaymentCardNo = EncryptByAsymKey(AsymKey_ID('AsymKey_paymentCarNo'), @PaymentCardNo);
--- -- SET @EncryptedPaymentCardNo = HASHBYTES('SHA2_256',CONVERT(VARBINARY, @EncryptedPaymentCardNo));
-
--- -- SELECT @EncryptedPaymentCardNo AS EncryptedPaymentCardNo;
+/* Create a DDM on doctor name */ -- NOTE: DDM
+ALTER TABLE Doctor
+ALTER COLUMN DName ADD MASKED WITH (FUNCTION = 'partial(5," XXX ",2)');
 
 
--- DECLARE @PaymentCardNo varchar(20) = 'alishdf';
--- DECLARE @EncryptedPaymentCardNo VARBINARY(MAX);
-
--- SET @EncryptedPaymentCardNo = HASHBYTES('SHA2_256', CONVERT(VARBINARY, @PaymentCardNo));
--- SELECT @EncryptedPaymentCardNo AS EncryptedPaymentCardNo;
-
--- SELECT SQL_VARIANT_PROPERTY(PaymentCardNo, 'BaseType') AS DataType
--- FROM Patient;
+-- view
+select name, subject, start_date, expiry_date
+from sys.certificates
+where name = 'CertForCLE'
 
 
--- -- delete and add new column
--- ALTER TABLE [dbo].[Doctor]
--- DROP COLUMN DPhone;
+-- Draft
+drop master key
+DROP CERTIFICATE CertForTDE;
+DROP DATABASE ENCRYPTION KEY;
 
--- ALTER TABLE [dbo].[Doctor]
--- ADD DPhone VARBINARY(MAX);
 
--- select * from Doctor
+

@@ -36,13 +36,13 @@ GO
 /* Create a view for patient table*/
 CREATE OR ALTER VIEW P_View_personal AS
     SELECT PID, Pname, PPhone,
-        CONVERT(varchar,DecryptByAsymkey(ASYMKEY_ID('AsymKey_paymentCarNo'),[PaymentCardNo])) as [PaymentCardNo] 
+        CONVERT(varchar,DecryptByAsymkey(ASYMKEY_ID('AsymKey_paymentCarNo'),[PaymentCardNo])) as [PaymentCardNo] -- NOTE: perform decryption using asymmetric
     FROM Patient
-    WHERE PID = ORIGINAL_LOGIN();
+    WHERE PID = ORIGINAL_LOGIN(); -- scrapt current user id
 GO
 
 
-/* View diagnosis records */
+/* View diagnosis records */ -- NOTE: perform decyption using doctor contact symmetric key
 CREATE OR ALTER VIEW P_View_diagnosis AS
     select a.DiagID, a.PatientID, a.DoctorID, b.DName as DoctorName,
         CONVERT(VARCHAR, DECRYPTBYKEY(b.DPhone)) AS DoctorPhone, a.DiagnosisDate,

@@ -32,3 +32,82 @@ INSERT INTO Diagnosis (PatientID, DoctorID, DiagnosisDate, Diagnosis) VALUES
 ('P6', 'D6', '2023-01-06 14:00:00', 'Hypertension'),
 ('P7', 'D7', '2023-01-07 15:00:00', 'Allergies'),
 ('P8', 'D8', '2023-01-08 16:00:00', 'Arthritis');
+
+
+
+/* Draft */
+-- For contact number for doctor
+OPEN SYMMETRIC KEY SimKey_contact1
+DECRYPTION BY CERTIFICATE CertForCLE;
+
+-- Update encrypted phone numbers
+UPDATE Doctor
+SET DPhone = EncryptByKey(Key_GUID('SimKey_contact1'), CONVERT(VARBINARY(MAX), '123-456-7890'))
+WHERE DrID = 'D1';
+
+UPDATE Doctor
+SET DPhone = EncryptByKey(Key_GUID('SimKey_contact1'), CONVERT(VARBINARY(MAX), '234-567-8901'))
+WHERE DrID = 'D2';
+
+UPDATE Doctor
+SET DPhone = EncryptByKey(Key_GUID('SimKey_contact1'), CONVERT(VARBINARY(MAX), '345-678-9012'))
+WHERE DrID = 'D3';
+
+UPDATE Doctor
+SET DPhone = EncryptByKey(Key_GUID('SimKey_contact1'), CONVERT(VARBINARY(MAX), '456-789-0123'))
+WHERE DrID = 'D4';
+
+UPDATE Doctor
+SET DPhone = EncryptByKey(Key_GUID('SimKey_contact1'), CONVERT(VARBINARY(MAX), '567-890-1234'))
+WHERE DrID = 'D5';
+
+UPDATE Doctor
+SET DPhone = EncryptByKey(Key_GUID('SimKey_contact1'), CONVERT(VARBINARY(MAX), '678-901-2345'))
+WHERE DrID = 'D6';
+
+UPDATE Doctor
+SET DPhone = EncryptByKey(Key_GUID('SimKey_contact1'), CONVERT(VARBINARY(MAX), '789-012-3456'))
+WHERE DrID = 'D7';
+
+UPDATE Doctor
+SET DPhone = EncryptByKey(Key_GUID('SimKey_contact1'), CONVERT(VARBINARY(MAX), '890-123-4567'))
+WHERE DrID = 'D8';
+
+-- Close the symmetric key
+CLOSE SYMMETRIC KEY SimKey_contact1;
+
+
+
+-- Patient payment card no
+UPDATE Patient
+SET PaymentCardNo = EncryptByAsymKey(AsymKey_ID('AsymKey_paymentCarNo'), CONVERT(VARBINARY(MAX), '1111-2222-3333-4444'))
+WHERE PID = 'P1';
+
+UPDATE Patient
+SET PaymentCardNo = EncryptByAsymKey(AsymKey_ID('AsymKey_paymentCarNo'), CONVERT(VARBINARY(MAX), '5555-6666-7777-8888'))
+WHERE PID = 'P2';
+
+UPDATE Patient
+SET PaymentCardNo = EncryptByAsymKey(AsymKey_ID('AsymKey_paymentCarNo'), CONVERT(VARBINARY(MAX), '9999-0000-1111-2222'))
+WHERE PID = 'P3';
+
+UPDATE Patient
+SET PaymentCardNo = EncryptByAsymKey(AsymKey_ID('AsymKey_paymentCarNo'), CONVERT(VARBINARY(MAX), '3333-4444-5555-6666'))
+WHERE PID = 'P4';
+
+UPDATE Patient
+SET PaymentCardNo = EncryptByAsymKey(AsymKey_ID('AsymKey_paymentCarNo'), CONVERT(VARBINARY(MAX), '7777-8888-9999-0000'))
+WHERE PID = 'P5';
+
+UPDATE Patient
+SET PaymentCardNo = EncryptByAsymKey(AsymKey_ID('AsymKey_paymentCarNo'), CONVERT(VARBINARY(MAX), '2222-3333-4444-5555'))
+WHERE PID = 'P6';
+
+UPDATE Patient
+SET PaymentCardNo = EncryptByAsymKey(AsymKey_ID('AsymKey_paymentCarNo'), CONVERT(VARBINARY(MAX), '6666-7777-8888-9999'))
+WHERE PID = 'P7';
+
+UPDATE Patient
+SET PaymentCardNo = EncryptByAsymKey(AsymKey_ID('AsymKey_paymentCarNo'), CONVERT(VARBINARY(MAX), '0000-1111-2222-3333'))
+WHERE PID = 'P8';
+

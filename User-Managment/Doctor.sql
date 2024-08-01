@@ -34,6 +34,10 @@ GRANT CONTROL ON CERTIFICATE::CertForCLE TO Doctor;
 -- Dianosis with patient view
 GRANT SELECT on DR_View_Patient_Diagnosis to Doctor
 
+
+-- Unmask
+GRANT UNMASK TO Doctor;
+
 -- Diagnosis
 GRANT SELECT ON Diagnosis TO Doctor
 GRANT EXEC on dbo.DR_Add_Diagnosis to Doctor -- Add diagnosis
@@ -42,7 +46,7 @@ GRANT EXEC on dbo.DR_UndoDiagnosis to Doctor -- Undo diagnosis
 GRANT SELECT ON OBJECT::cdc.dbo_Diagnosis_CT TO Doctor; -- select on cdc file
 
 /* Action */
--- View personal information
+-- View personal information [NOTE: decryptoion action]
 OPEN SYMMETRIC KEY SimKey_contact1
 DECRYPTION BY CERTIFICATE CertForCLE;
 SELECT * FROM View_Doctor_personal

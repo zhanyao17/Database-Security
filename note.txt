@@ -14,3 +14,25 @@ CHECK:
 
 Docker
 -> /opt/mssql-tools/bin/sqlcmd -S 127.0.0.1,1434 -U SA -P 'zhanyao88' -i /opt/mssql/backup/test_sch_backup.sql
+
+
+# Setup auto backup
+- First time running the backup need to allow permision using (chmod 775 /opt/mssql/backup) on your docker env
+- Enter crontab -> crontab -e
+- Setup using vim
+
+
+# Encryption process
+1. symmetric and asymetrics (encrypte data before store into database) encryption with key
+2. hashing techniques (hast or encrypte data after data store into database)    mostly been implemented in the view section
+    -> Data Anonymization (done) 
+    -> masking
+    -> hashing (done)
+
+3. Cryptography
+    -> Symmetric key encryption
+    -> Asymetrics key Encryption
+    -> Certificate-Based Encryption
+    -> TDE
+
+

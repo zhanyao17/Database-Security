@@ -243,7 +243,7 @@ GO
 /* ------------------------- Views ---------------------------- */
 /* View for active doctor */
 CREATE OR ALTER VIEW DA_Active_Doctor as 
-    SELECT DrID, DName
+    SELECT DrID, DName  -- NOTE: masking on doctor name
     from Doctor
     WHERE RowStatus = 1
 GO
@@ -258,8 +258,8 @@ GO
 /* View for active patient */
 CREATE OR ALTER VIEW DA_Active_Patient as 
     SELECT PID, 
-        'Anonymous_' + CAST(ABS(CHECKSUM(PName)) % 1000 AS NVARCHAR) as Anonymous_Patient,
-        HASHBYTES('SHA2_256',PPhone) as Protected_PPhone
+        'Anonymous_' + CAST(ABS(CHECKSUM(PName)) % 1000 AS NVARCHAR) as Anonymous_Patient,-- NOTE: Anonymization
+        HASHBYTES('SHA2_256',PPhone) as Protected_PPhone -- NOTE: Hasing
     from Patient
     WHERE RowStatus = 1
 GO
@@ -267,8 +267,8 @@ GO
 /* View for in-active patient */
 CREATE OR ALTER VIEW DA_Inactive_Patient as 
     SELECT PID, 
-        'Anonymous_' + CAST(ABS(CHECKSUM(PName)) % 1000 AS NVARCHAR) as Anonymous_Patient,
-        HASHBYTES('SHA2_256',PPhone) as Protected_PPhone
+        'Anonymous_' + CAST(ABS(CHECKSUM(PName)) % 1000 AS NVARCHAR) as Anonymous_Patient, -- NOTE: Anonymization
+        HASHBYTES('SHA2_256',PPhone) as Protected_PPhone -- NOTE: Hasing
     from Patient
     WHERE RowStatus = 0
 GO
@@ -276,7 +276,7 @@ GO
 /* View diagnosis table */
 CREATE or ALTER VIEW DA_Diagnosis as 
     SELECT DiagID, PatientID, DoctorID, DiagnosisDate,
-        'Diagnosis_' + CAST(ABS(CHECKSUM(Diagnosis)) % 1000 AS NVARCHAR) as Anonymous_Diagnosis
+        'Diagnosis_' + CAST(ABS(CHECKSUM(Diagnosis)) % 1000 AS NVARCHAR) as Anonymous_Diagnosis -- NOTE: Anonymization
     from Diagnosis;
 GO
 

@@ -24,9 +24,12 @@ GRANT SELECT on P_View_personal to Patient -- views personal info
 GRANT EXECUTE on dbo.P_Manage_PII to Patient -- execute update pii procedure
 GRANT SELECT ON P_View_diagnosis to Patient -- view diagnosis info
 
--- For Asymetric key
+--NOTE: For Asymetric key
 GRANT CONTROL ON ASYMMETRIC KEY::AsymKey_paymentCarNo TO Patient;
 GRANT VIEW DEFINITION ON ASYMMETRIC KEY::AsymKey_paymentCarNo TO Patient;
+
+-- Unmask NOTE:
+GRANT UNMASK TO Patient;
 
 -- For symetric key to view doctor contact
 GRANT CONTROL ON SYMMETRIC KEY::SimKey_contact1 TO Patient;
@@ -43,4 +46,4 @@ EXEC P_Manage_PII @PName='Ali'
 OPEN SYMMETRIC KEY SimKey_contact1
 DECRYPTION BY CERTIFICATE CertForCLE;
 select * from P_View_diagnosis
-CLOSE SYMMETRIC KEY SimKey_contact1
+CLOSE SYMMETRIC KEY SimKey_contact
