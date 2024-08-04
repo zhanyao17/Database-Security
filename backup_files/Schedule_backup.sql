@@ -40,6 +40,10 @@ GO
 /* Manual start job */
 EXEC msdb.dbo.sp_start_job @job_name = N'DatabaseBackupJob';
 
+/* Scheduling will bed one using crontab
+-> * * / 6 * * * /opt/mssql/backup/run_backup.sh >> /opt/mssql/backup/bckup_logs.log 2>/dev/null
+*/
+
 
 /* View backup history */
 SELECT instance_id, job_id, step_name, message,

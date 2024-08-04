@@ -13,7 +13,7 @@ Run files follow with this steps ...
     - cp local:`/Backup_files/backup.sql` to env: `/opt/mssql/backup`
     - cp local:`/Backup_files/run_backup.sh` to env:`opt/mssql/backup`
     - same goes to the certificate (KEY & CERT files)
-    - `apt install crontab` for setup sceduler
+    - `apt install cron` for setup sceduler
     - `apt install vim` for edit crontab -e
 
 # Important
