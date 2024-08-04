@@ -17,7 +17,7 @@ Run files follow with this steps ...
     - `apt install vim` for edit crontab -e
 
 # Important
-- Since we have limitation on using SSMS on a unix devices, some of the setup for the auditing and auto scheduling backup.
+- Since we have limitation on using SSMS on a unix devices, some of the setup for the auditing and auto scheduling backup will be different.
 - Multiple encryption methods had been implemented in this databse for security purposes:
     - Default: Masker key + CERT
     - Asymmetric encryption
