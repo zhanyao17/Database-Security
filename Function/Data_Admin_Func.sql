@@ -8,7 +8,6 @@
 CREATE OR ALTER PROCEDURE DA_ManagePatientRecords
 @PID VARCHAR(6)=NULL,
 @PName VARCHAR(100)=NULL
-
 AS
 BEGIN
     DECLARE @PPhone VARCHAR(20)
@@ -27,7 +26,7 @@ BEGIN
         BEGIN
             PRINT 'Saving Record...'
             DECLARE @latestpid VARCHAR(6), @intId INT
-            SELECT TOP 1 @latestpid=PID from Patient ORDER BY PID DESC
+            SELECT TOP 1 @latestpid=PID from Patient ORDER by cast(REPLACE(PID,'D','') as int) DESC
             SELECT @intId = Cast(RIGHT(@latestpid, Len(@latestpid)-1) as int)
             SET @PID = 'P'+Cast((@intId+1)as varchar(6))
             PRINT 'New Patient ID: '+@PID
@@ -91,7 +90,7 @@ BEGIN
         BEGIN
             PRINT 'Saving Record...'
             DECLARE @latestdid VARCHAR(6), @intId INT
-            SELECT TOP 1 @latestdid = DrID FROM Doctor ORDER BY DrID DESC
+            SELECT TOP 1 @latestdid = DrID FROM Doctor ORDER by cast(REPLACE(DrID,'D','') as int) DESC
             SELECT @intId = CAST(RIGHT(@latestdid, LEN(@latestdid) - 1) AS INT)
             SET @DrID = 'D' + CAST((@intId + 1) AS VARCHAR(6)) 
             PRINT 'New Doctor ID: ' + @DrID
@@ -180,9 +179,6 @@ BEGIN
     ELSE
     BEGIN
         PRINT 'Records will be deleted in a while...'
-        -- DELETE FROM Doctor
-        -- WHERE DrID = @DrID
-        -- Perform manual soft delete
         UPDATE Doctor
         set RowStatus = 0
         WHERE DrID = @DrID
@@ -223,8 +219,6 @@ BEGIN
         @DName = DName,
         @DPhone = DPhone,
         @RowStatus = RowStatus
-        -- @ValidFrom = ValidFrom,
-        -- @ValidTo = CONVERT(DATETIME2, '9999-12-31 23:59:59.9999999')
     FROM dbo.DoctorHistory
     ORDER BY ValidTo DESC
     PRINT 'Record had been reverted !!'
@@ -232,8 +226,6 @@ BEGIN
     SET [DName] = @DName,
         [DPhone] = @DPhone,
         [RowStatus] = @RowStatus
-        -- [ValidFrom] = @ValidFrom,
-        -- [ValidTo] = @ValidTo
     WHERE [DrID] = @DrID;
 END
 GO

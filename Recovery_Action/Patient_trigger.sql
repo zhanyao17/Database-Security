@@ -47,9 +47,12 @@ BEGIN
 END;
 GO
 
+-- View log
+select * from AuditLog_Patient
 
-
-
+-- Disable trigger
+DISABLE TRIGGER [ProtectPatientTable] ON [Patient]; -- for hard dlt column
+ENABLE TRIGGER [ProtectPatientTable] ON [Patient];
 
 /* Drop table */
 -- drop TRIGGER [PatientDataChanges]

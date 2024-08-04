@@ -21,9 +21,15 @@ GO
 
 
 /* Clear cache inside the history table */
-ALTER TABLE dbo.Doctor SET (SYSTEM_VERSIONING = OFF); GO
-TRUNCATE TABLE dbo.DoctorHistory; GO
-DELETE FROM dbo.DoctorHistory; go
+ALTER TABLE dbo.Doctor SET (SYSTEM_VERSIONING = OFF); 
+GO
+TRUNCATE TABLE dbo.DoctorHistory; 
+GO
+DELETE FROM dbo.DoctorHistory; 
+go
 
 
 /*  View history table */
+select * from DoctorHistory
+
+select * from Doctor

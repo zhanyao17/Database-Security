@@ -19,6 +19,7 @@ ALTER DATABASE MedicalInfoSystem SET ENCRYPTION ON
 
 
 -- Check database was encrypted anot
+USE master;
 SELECT db_name(a.database_id) AS DBName , a.encryption_state_desc, a.encryptor_type, b.name as 'DEK Encrypted By'
 FROM sys.dm_database_encryption_keys a
 INNER JOIN sys.certificates b ON a.encryptor_thumbprint = b.thumbprint
@@ -37,7 +38,7 @@ CREATE SYMMETRIC KEY SimKey_contact1 -- NOTE: Symmetric key for doctor contact n
 WITH ALGORITHM = AES_256 ENCRYPTION BY CERTIFICATE CertForCLE
 
 
-/* Create a DDM on doctor name */ -- NOTE: DDM
+/* Create a DDM on doctor name */ -- NOTE: Dynamic masking
 ALTER TABLE Doctor
 ALTER COLUMN DName ADD MASKED WITH (FUNCTION = 'partial(5," XXX ",2)');
 
@@ -52,6 +53,3 @@ where name = 'CertForCLE'
 drop master key
 DROP CERTIFICATE CertForTDE;
 DROP DATABASE ENCRYPTION KEY;
-
-
-

@@ -21,10 +21,8 @@ CREATE LOGIN P2 with PASSWORD ='P_2@1234'; -- creat new user
 
 /* Grant permission */
 GRANT SELECT on P_View_personal to Patient -- views personal info
-GRANT EXECUTE on dbo.P_Manage_PII to Patient -- execute update pii procedure
-GRANT SELECT ON P_View_diagnosis to Patient -- view diagnosis info
 
---NOTE: For Asymetric key
+--For Asymetric key
 GRANT CONTROL ON ASYMMETRIC KEY::AsymKey_paymentCarNo TO Patient;
 GRANT VIEW DEFINITION ON ASYMMETRIC KEY::AsymKey_paymentCarNo TO Patient;
 
@@ -35,15 +33,25 @@ GRANT UNMASK TO Patient;
 GRANT CONTROL ON SYMMETRIC KEY::SimKey_contact1 TO Patient;
 GRANT CONTROL ON CERTIFICATE::CertForCLE TO Patient;
 
+
+-- Exec
+GRANT Execute on P_View_Decrypted_dianosis to Patient -- view decrypted diagnosis
+GRANT EXECUTE on dbo.P_Manage_PII to Patient -- execute update pii procedure
+Grant execute on P_UndoPatientDetails to Patient -- For perform undo on PII
+
+
 /* Action */
 -- view own pii
 select * from P_View_personal
 
 -- Changing own info
-EXEC P_Manage_PII @PName='Ali'
+EXEC P_Manage_PII @PName='Ali_new'
+
+-- Perform undo
+EXEC P_UndoPatientDetails
 
 -- View own diagnosis records
-OPEN SYMMETRIC KEY SimKey_contact1
-DECRYPTION BY CERTIFICATE CertForCLE;
-select * from P_View_diagnosis
-CLOSE SYMMETRIC KEY SimKey_contact
+Exec P_View_Decrypted_dianosis
+
+-- [TRY] delete dianosis records
+delete from Diagnosis where DiagID = 1

@@ -1,25 +1,52 @@
 
 -- /**************** Auditing DDL activities ****************/
+-- Create a logging table for DDL activities
+CREATE TABLE DDLLog (
+    LogID INT IDENTITY(1,1) PRIMARY KEY,
+    EventDate DATETIME DEFAULT GETDATE(),
+    UserName NVARCHAR(128),
+    Command NVARCHAR(MAX),
+    EventType NVARCHAR(50)
+);
+GO
+
 -- Prevent drop and create action
-create or alter trigger PreventDrop
-on DATABASE
-for drop_table, alter_table, create_table
+CREATE OR ALTER TRIGGER PreventDrop
+ON DATABASE
+FOR DROP_TABLE, ALTER_TABLE, CREATE_TABLE
 AS
-declare @cmd varchar(max)
-SELECT @CMD = EVENTDATA().value('(/EVENT_INSTANCE/TSQLCommand/CommandText)[1]', 'nvarchar(max)')
-IF @cmd like '%drop%' or @cmd like '%CREATE TABLE%'
+DECLARE @cmd NVARCHAR(MAX);
+DECLARE @eventType NVARCHAR(50);
+DECLARE @userName NVARCHAR(128);
+
+SELECT @cmd = EVENTDATA().value('(/EVENT_INSTANCE/TSQLCommand/CommandText)[1]', 'nvarchar(max)');
+SELECT @eventType = EVENTDATA().value('(/EVENT_INSTANCE/EventType)[1]', 'nvarchar(max)');
+SELECT @userName = ORIGINAL_LOGIN();
+
+IF @cmd LIKE '%DROP%' OR @cmd LIKE '%CREATE TABLE%'
 BEGIN
-PRINT 'You are not allowed to drop a table or table column';
-ROLLBACK;
-end
-Go
+    ROLLBACK
+    PRINT 'You are not allowed to drop a table or create a tables';
+    INSERT INTO DDLLog (UserName, Command, EventType) --NOTE: insert the log after the rollback
+    VALUES (@userName, @cmd, @eventType);
+END
+GO
+
+/* View logs of the DDL action */
+select * from DDLLog; 
+go
 
 /* Disable or enable */
-DISABLE TRIGGER PreventDrop ON DATABASE; GO
-ENABLE TRIGGER PreventDrop ON DATABASE; GO
+DISABLE TRIGGER PreventDrop ON DATABASE; 
+GO
+ENABLE TRIGGER PreventDrop ON DATABASE;
+GO 
+
+
+
 
 /**************** Auditing DML activities ****************/
--- capture dml action
+-- capture DML action
 USE master
 CREATE SERVER AUDIT DMLAudit TO FILE ( FILEPATH = '/opt/mssql/audit' ); 
 -- Enable the server audit.
@@ -114,7 +141,30 @@ order by event_time DESC;
 GO
 
 
+-- DEMO
+/*  
+Login failed and successful on workbench
+    mssql -u P1 -p zhanyao88
+    mssql -u P1 -p P_1@1234
+*/
+
+-- DDL -> dropping tables
+CREATE TABLE test_table (
+    LogID INT IDENTITY(1,1) PRIMARY KEY,
+    EventDate DATETIME DEFAULT GETDATE(),
+    UserName NVARCHAR(128),
+    Command NVARCHAR(MAX),
+    EventType NVARCHAR(50)
+);
+
+-- select * from test_table; GO
+DROP table test_table;
+go
+
+
 /********************** view config *********************/
 SELECT * FROM sys.server_audits;
 SELECT * FROM sys.server_audit_specifications;
 SELECT * FROM sys.server_audit_specification_details;
+
+SELECT name FROM sys.triggers WHERE parent_class_desc = 'DATABASE' AND name = 'PreventDrop'; -- view triger

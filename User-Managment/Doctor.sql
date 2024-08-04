@@ -20,8 +20,6 @@ CREATE LOGIN D2 with PASSWORD ='DR2@1234'; -- creat new user
 
 
 /* Grant permission */
-GRANT EXECUTE on dbo.DR_ManageDoctorRecords to Doctor -- procedure
-
 -- Doctor
 GRANT select on View_Doctor_personal to Doctor -- views own pii
 
@@ -34,32 +32,44 @@ GRANT CONTROL ON CERTIFICATE::CertForCLE TO Doctor;
 -- Dianosis with patient view
 GRANT SELECT on DR_View_Patient_Diagnosis to Doctor
 
-
 -- Unmask
 GRANT UNMASK TO Doctor;
 
 -- Diagnosis
 GRANT SELECT ON Diagnosis TO Doctor
+
+GRANT SELECT ON OBJECT::cdc.dbo_Diagnosis_CT TO Doctor; -- select on cdc file
+
+-- Exec
 GRANT EXEC on dbo.DR_Add_Diagnosis to Doctor -- Add diagnosis
 GRANT EXEC on dbo.DR_Udpate_Diagnosis to Doctor -- Update diagnosis
 GRANT EXEC on dbo.DR_UndoDiagnosis to Doctor -- Undo diagnosis
-GRANT SELECT ON OBJECT::cdc.dbo_Diagnosis_CT TO Doctor; -- select on cdc file
+GRANT EXECUTE on dbo.DR_ManageDoctorRecords to Doctor -- mode PII
+GRANT EXECUTE on dbo.DR_UndoDoctorRecord to Doctor -- undo PII
+GRANT EXECUTE on dbo.DR_View_Decrypted_Doctor_PII to Doctor -- view decrypted data
+
 
 /* Action */
--- View personal information [NOTE: decryptoion action]
-OPEN SYMMETRIC KEY SimKey_contact1
-DECRYPTION BY CERTIFICATE CertForCLE;
-SELECT * FROM View_Doctor_personal
-CLOSE SYMMETRIC KEY SimKey_contact1
+-- View personal information
+EXEC DR_View_Decrypted_Doctor_PII
 
--- Modify own details
-EXEC DA_ManageDoctorRecords @DName = 'Dr. John Smith'
-
--- update diagnosis details
-exec DR_Udpate_Diagnosis @DiagID = 16, @Diagnosis = 'fever'
-
--- perform undo on changes make in diagnosis table
-exec DR_UndoDiagnosis
+-- Add diagnosis details
+exec DR_Add_Diagnosis @PID = 'P1' 
 
 -- View diagnosis
-Select * from Diagnosis
+Select * from DR_View_Patient_Diagnosis
+
+-- Update diagnosis details
+exec DR_Udpate_Diagnosis @DiagID = 17, @Diagnosis = 'fever'
+
+-- Perform undo on changes make in diagnosis table
+exec DR_UndoDiagnosis
+
+-- [TRY] Delete any records
+delete from Diagnosis where DiagID = 17
+
+-- Modify own details
+EXEC DR_ManageDoctorRecords @DName = 'Dr. John Smith', @DPhone = '123-456-8888'
+
+-- Undo own details
+EXEC DR_UndoDoctorRecord

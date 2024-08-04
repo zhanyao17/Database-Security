@@ -43,21 +43,48 @@ GO
 
 
 /* View diagnosis records */ -- NOTE: perform decyption using doctor contact symmetric key
-CREATE OR ALTER VIEW P_View_diagnosis AS
+CREATE OR ALTER PROCEDURE P_View_Decrypted_dianosis as 
+BEGIN
+    OPEN SYMMETRIC KEY SimKey_contact1
+    DECRYPTION BY CERTIFICATE CertForCLE;
     select a.DiagID, a.PatientID, a.DoctorID, b.DName as DoctorName,
-        CONVERT(VARCHAR, DECRYPTBYKEY(b.DPhone)) AS DoctorPhone, a.DiagnosisDate,
-        a.Diagnosis
+    CONVERT(VARCHAR, DECRYPTBYKEY(b.DPhone)) AS DoctorPhone, a.DiagnosisDate,
+    a.Diagnosis
     from Diagnosis a
     inner join Doctor b
     on a.DoctorID = b.DrID
     WHERE a.PatientID = ORIGINAL_LOGIN()
+    CLOSE SYMMETRIC KEY SimKey_contact1
+END;
 GO
 
 
-
+/* Perform undo on it personal details */
+CREATE or ALTER PROCEDURE P_UndoPatientDetails
+as 
+BEGIN 
+    DECLARE @Pid VARCHAR(6), @PName varchar (100), @PPhone varchar(20),
+        @PaymentCardNo varbinary(max), @RowStatus INT
+    SELECT top 1
+        @Pid = PID,
+        @PName = PName,
+        @PPhone = PPhone,
+        @PaymentCardNo = PaymentCardNo,
+        @RowStatus = RowStatus
+    from AuditLog_Patient
+    WHERE PID = ORIGINAL_LOGIN()
+    ORDER by [Log ID] DESC
+    PRINT 'Record had been reverted !!'
+    UPDATE [dbo].[Patient]
+    SET [PName] = @PName,
+        [PPhone] = @PPhone,
+        [PaymentCardNo] = @PaymentCardNo,
+        [RowStatus] = @RowStatus
+    WHERE PID = @Pid
+END
+GO
 /* Test exec */
 -- EXEC P_Manage_PII @PID='P1', @PName='Ali'
 
 
 
-select * from Diagnosis

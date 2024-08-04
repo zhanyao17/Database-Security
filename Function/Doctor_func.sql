@@ -9,6 +9,10 @@ CREATE OR ALTER PROCEDURE DR_ManageDoctorRecords
 @DPhone VARCHAR(20) = NULL
 AS
 BEGIN
+    -- open encryption
+    OPEN SYMMETRIC KEY SimKey_contact1
+    DECRYPTION BY CERTIFICATE CertForCLE
+
     DECLARE @DrID VARCHAR(6)
     SET @DrID = ORIGINAL_LOGIN()
     BEGIN
@@ -24,21 +28,29 @@ BEGIN
         IF @DPhone IS NOT NULL
         BEGIN
             UPDATE [dbo].[Doctor]
-            SET [DPhone] = EncryptByKey(Key_GUID('SimKey_contact1'),@DPhone)
+            SET [DPhone] =  EncryptByKey(Key_GUID('SimKey_contact1'), CONVERT(VARBINARY(MAX), @DPhone))
             WHERE [DrID] = @DrID
         END
     END
+    -- Close the symmetric key
+    CLOSE SYMMETRIC KEY SimKey_contact1;
 END
 GO
 
 /* Create a view for doctor table*/
-CREATE OR ALTER VIEW View_Doctor_personal AS
+CREATE or ALTER PROCEDURE DR_View_Decrypted_Doctor_PII
+as 
+BEGIN
+    OPEN SYMMETRIC KEY SimKey_contact1
+    DECRYPTION BY CERTIFICATE CertForCLE;
     SELECT 
         DrID, 
         DName, 
         CONVERT(VARCHAR, DECRYPTBYKEY(DPhone)) AS DPhone  -- NOTE: perform decryption using symmetric
     FROM Doctor
     WHERE DrID = ORIGINAL_LOGIN(); 
+    CLOSE SYMMETRIC KEY SimKey_contact1
+END;
 GO
 
 
@@ -134,7 +146,8 @@ GO
 CREATE OR ALTER PROCEDURE DR_UndoDiagnosis
 as 
 BEGIN
-    DECLARE @DiagID INT, @PatientID varchar(6), @DoctorID VARCHAR(6), @DiagnosisDate datetime, @Diagnosis VARCHAR(max)
+    DECLARE @DiagID INT, @PatientID varchar(6), @DoctorID VARCHAR(6), 
+        @DiagnosisDate datetime, @Diagnosis VARCHAR(max)
     SELECT 
         @DiagID = DiagID,
         @PatientID = PatientID,
@@ -156,15 +169,24 @@ BEGIN
 END
 GO
 
-
--- Capture the SID (Security Identifier) of the current login user
--- EXEC DA_ManageDoctorRecords @DName = 'Dr. John Smith'
--- SET IDENTITY_INSERT Diagnosis off
--- EXEC DR_Add_Diagnosis @PID = 'P2'
--- EXEC DR_Udpate_Diagnosis @DiagID = 8, @Diagnosis ='Flu'
-
-
-
--- select * from Diagnosis
-
--- select * from DR_View_Patient_Diagnosis
+/* Undo PII */
+CREATE or ALTER PROCEDURE DR_UndoDoctorRecord
+as 
+BEGIN
+    DECLARE @DrID VARCHAR(6), @DName VARCHAR (100), @DPhone VARBINARY(max), @RowStatus INT
+    Select top 1
+        @DrID = ORIGINAL_LOGIN(),
+        @DName = DName,
+        @DPhone = DPhone,
+        @RowStatus = RowStatus
+    from DoctorHistory
+    WHERE DrID = ORIGINAL_LOGIN()
+    order by ValidTo DESC
+    PRINT 'Record had been reverted !!'
+    update [dbo].[Doctor]
+    set [DName] = @DName,
+        [DPhone] = @DPhone,
+        [RowStatus] = @RowStatus
+    WHERE [DrID] = @DrID
+END
+go
