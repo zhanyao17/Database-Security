@@ -15,7 +15,9 @@ ALTER role Doctor add member D1
 
 
 -- Doctor 2
-CREATE LOGIN D2 with PASSWORD ='DR2@1234'; -- creat new user
+CREATE LOGIN D2 with PASSWORD ='DR2@1234'; -- creat new login
+CREATE LOGIN D3 with PASSWORD ='DR3@1234'; -- creat new login
+CREATE LOGIN D4 with PASSWORD ='DR4@1234'; -- creat new login
 -- CREATE USER D2 for LOGIN D2;
 
 
@@ -50,17 +52,20 @@ GRANT EXECUTE on dbo.DR_View_Decrypted_Doctor_PII to Doctor -- view decrypted da
 
 
 /* Action */
--- View personal information
+-- View personal information [symmetric]
 EXEC DR_View_Decrypted_Doctor_PII
-
--- Add diagnosis details
-exec DR_Add_Diagnosis @PID = 'P1' 
 
 -- View diagnosis
 Select * from DR_View_Patient_Diagnosis
 
+-- Add diagnosis details
+exec DR_Add_Diagnosis @PID = 'P1' 
+
 -- Update diagnosis details
-exec DR_Udpate_Diagnosis @DiagID = 17, @Diagnosis = 'fever'
+exec DR_Udpate_Diagnosis @DiagID = 18, @Diagnosis = 'Flu'
+
+-- [TRY] update other doctor's diagnosis details
+exec DR_Udpate_Diagnosis @DiagID = 2, @Diagnosis = 'Flu'
 
 -- Perform undo on changes make in diagnosis table
 exec DR_UndoDiagnosis
@@ -69,7 +74,7 @@ exec DR_UndoDiagnosis
 delete from Diagnosis where DiagID = 17
 
 -- Modify own details
-EXEC DR_ManageDoctorRecords @DName = 'Dr. John Smith', @DPhone = '123-456-8888'
+-- EXEC DR_ManageDoctorRecords @DName = 'Dr. John Smith', @DPhone = '123-456-8888'
 
--- Undo own details
-EXEC DR_UndoDoctorRecord
+-- -- Undo own details
+-- EXEC DR_UndoDoctorRecord

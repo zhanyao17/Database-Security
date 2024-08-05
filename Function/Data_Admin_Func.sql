@@ -235,14 +235,14 @@ GO
 /* ------------------------- Views ---------------------------- */
 /* View for active doctor */
 CREATE OR ALTER VIEW DA_Active_Doctor as 
-    SELECT DrID, DName  -- NOTE: masking on doctor name
+    SELECT DrID, DName, DPhone  -- NOTE: masking on doctor name
     from Doctor
     WHERE RowStatus = 1
 GO
 
 /* View for in-active doctor */
 CREATE OR ALTER VIEW DA_Inactive_Doctor as 
-    SELECT DrID, DName
+    SELECT DrID, DName, DPhone
     from Doctor
     WHERE RowStatus = 0
 GO

@@ -16,6 +16,8 @@ ALTER role Patient add member P1
 
 -- Patient 2
 CREATE LOGIN P2 with PASSWORD ='P_2@1234'; -- creat new user
+CREATE LOGIN P3 with PASSWORD ='P_2@1234'; -- creat new user
+CREATE LOGIN P4 with PASSWORD ='P_2@1234'; -- creat new user
 -- CREATE USER P2 for LOGIN P2;
 
 

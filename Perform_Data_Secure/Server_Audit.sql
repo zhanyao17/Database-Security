@@ -23,17 +23,17 @@ SELECT @cmd = EVENTDATA().value('(/EVENT_INSTANCE/TSQLCommand/CommandText)[1]', 
 SELECT @eventType = EVENTDATA().value('(/EVENT_INSTANCE/EventType)[1]', 'nvarchar(max)');
 SELECT @userName = ORIGINAL_LOGIN();
 
-IF @cmd LIKE '%DROP%' OR @cmd LIKE '%CREATE TABLE%'
+IF @cmd LIKE '%DROP%' OR @cmd LIKE '%CREATE TABLE%' OR @cmd LIKE '%ALTER TABLE%'
 BEGIN
     ROLLBACK
-    PRINT 'You are not allowed to drop a table or create a tables';
+    PRINT 'You are not allowed to modify/add existing table or columns';
     INSERT INTO DDLLog (UserName, Command, EventType) --NOTE: insert the log after the rollback
     VALUES (@userName, @cmd, @eventType);
 END
 GO
 
 /* View logs of the DDL action */
-select * from DDLLog; 
+select * from DDLLog order by EventDate desc; 
 go
 
 /* Disable or enable */
@@ -157,8 +157,9 @@ CREATE TABLE test_table (
     EventType NVARCHAR(50)
 );
 
--- select * from test_table; GO
-DROP table test_table;
+ALTER TABLE test_table DROP COLUMN Command; -- drop column
+ALTER TABLE test_table ADD hire_date DATE;-- create column
+DROP table test_table; -- drop table
 go
 
 

@@ -20,7 +20,6 @@ ORDER BY __$start_lsn DESC
 OFFSET 1 ROWS
 FETCH NEXT 1 ROW ONLY;
 
-select * from Diagnosis
 
 
 /* 

@@ -173,7 +173,8 @@ GO
 CREATE or ALTER PROCEDURE DR_UndoDoctorRecord
 as 
 BEGIN
-    DECLARE @DrID VARCHAR(6), @DName VARCHAR (100), @DPhone VARBINARY(max), @RowStatus INT
+    DECLARE @DrID VARCHAR(6), @DName VARCHAR (100), 
+        @DPhone VARBINARY(max), @RowStatus INT
     Select top 1
         @DrID = ORIGINAL_LOGIN(),
         @DName = DName,

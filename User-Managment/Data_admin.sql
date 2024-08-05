@@ -53,7 +53,7 @@ GRANT EXECUTE on dbo.DA_UndoPatient to Data_Admin; -- Perform undo on patient ta
 GRANT EXECUTE on dbo.DA_UndoDoctor to Data_Admin; -- Perform undo on doctor table
 
 /* Action */
--- Create new fyi this pasrt we assum that the login had been created 
+-- Create new fyi this part we assume that the login had been created 
 CREATE USER D2 for LOGIN D2;
 ALTER role Doctor add member D2 -- adding new doctor
 
@@ -61,6 +61,8 @@ ALTER role Doctor add member D2 -- adding new doctor
 CREATE USER P2 for LOGIN P2
 ALTER role Patient add member P2 -- adding new patient
 
+-- drop user P2
+-- drop user D2
 
 -- View active or in-active user [we perform soft delete function to resolve foreign key constraints issues]
 select * from DA_Active_Doctor; -- active doctor
@@ -71,6 +73,305 @@ select * from DA_Inactive_Patient -- inactive patient
 -- View dianosis
 select * from DA_Diagnosis
 
+-- -- Adding new patient records
+-- EXEC DA_ManagePatientRecords @PName = 'TestNew2'
+-- -- EXEC DA_ManagePatientRecords @PID = 'P9' ,@PName = 'Ah Meng'
+
+-- -- Deleting patient records
+-- EXEC DA_DeletePatientRecords @PID = 'P9'
+
+-- -- Adding new doctor records
+-- EXEC DA_ManageDoctorRecords @DName = 'Dr. testNew'
+-- -- EXEC DA_ManageDoctorRecords @DrID = 'D1' ,@DName = 'Dr. Ali'
+
+-- -- Deleting doctor records
+-- EXEC DA_DeleteDoctorRecords @DrID = 'D9'
+
+-- -- Undo patient
+-- EXEC DA_UndoPatient
+
+-- -- Undo doctor
+-- EXEC DA_UndoDoctor
+
+/* Role user mapping */
+SELECT roles.[name] as role_name, members.[name] as user_name
+FROM sys.database_role_members 
+INNER JOIN sys.database_principals roles 
+ON database_role_members.role_principal_id = roles.principal_id
+INNER JOIN sys.database_principals members 
+ON database_role_members.member_principal_id = members.principal_id
+WHERE roles.name in ('Data_Admin','Doctor','Patient')
+GO
+
+-- Adding new patient records
+EXEC DA_ManagePatientRecords @PName = 'TestNew2'
+-- EXEC DA_ManagePatientRecords @PID = 'P9' ,@PName = 'Ah Meng'
+
+-- Deleting patient records
+EXEC DA_DeletePatientRecords @PID = 'P9'
+
+-- Adding new doctor records
+EXEC DA_ManageDoctorRecords @DName = 'Dr. testNew'
+-- EXEC DA_ManageDoctorRecords @DrID = 'D1' ,@DName = 'Dr. Ali'
+
+-- Deleting doctor records
+EXEC DA_DeleteDoctorRecords @DrID = 'D9'
+
+-- Undo patient
+EXEC DA_UndoPatient
+
+-- Undo doctor
+EXEC DA_UndoDoctor
+
+/* Role user mapping */
+SELECT roles.[name] as role_name, members.[name] as user_name
+FROM sys.database_role_members 
+INNER JOIN sys.database_principals roles 
+ON database_role_members.role_principal_id = roles.principal_id
+INNER JOIN sys.database_principals members 
+ON database_role_members.member_principal_id = members.principal_id
+WHERE roles.name in ('Data_Admin','Doctor','Patient')
+GO
+
+-- Adding new patient records
+EXEC DA_ManagePatientRecords @PName = 'TestNew2'
+-- EXEC DA_ManagePatientRecords @PID = 'P9' ,@PName = 'Ah Meng'
+
+-- Deleting patient records
+EXEC DA_DeletePatientRecords @PID = 'P9'
+
+-- Adding new doctor records
+EXEC DA_ManageDoctorRecords @DName = 'Dr. testNew'
+-- EXEC DA_ManageDoctorRecords @DrID = 'D1' ,@DName = 'Dr. Ali'
+
+-- Deleting doctor records
+EXEC DA_DeleteDoctorRecords @DrID = 'D9'
+
+-- Undo patient
+EXEC DA_UndoPatient
+
+-- Undo doctor
+EXEC DA_UndoDoctor
+
+/* Role user mapping */
+SELECT roles.[name] as role_name, members.[name] as user_name
+FROM sys.database_role_members 
+INNER JOIN sys.database_principals roles 
+ON database_role_members.role_principal_id = roles.principal_id
+INNER JOIN sys.database_principals members 
+ON database_role_members.member_principal_id = members.principal_id
+WHERE roles.name in ('Data_Admin','Doctor','Patient')
+GO
+
+-- Adding new patient records
+EXEC DA_ManagePatientRecords @PName = 'TestNew2'
+-- EXEC DA_ManagePatientRecords @PID = 'P9' ,@PName = 'Ah Meng'
+
+-- Deleting patient records
+EXEC DA_DeletePatientRecords @PID = 'P9'
+
+-- Adding new doctor records
+EXEC DA_ManageDoctorRecords @DName = 'Dr. testNew'
+-- EXEC DA_ManageDoctorRecords @DrID = 'D1' ,@DName = 'Dr. Ali'
+
+-- Deleting doctor records
+EXEC DA_DeleteDoctorRecords @DrID = 'D9'
+
+-- Undo patient
+EXEC DA_UndoPatient
+
+-- Undo doctor
+EXEC DA_UndoDoctor
+
+/* Role user mapping */
+SELECT roles.[name] as role_name, members.[name] as user_name
+FROM sys.database_role_members 
+INNER JOIN sys.database_principals roles 
+ON database_role_members.role_principal_id = roles.principal_id
+INNER JOIN sys.database_principals members 
+ON database_role_members.member_principal_id = members.principal_id
+WHERE roles.name in ('Data_Admin','Doctor','Patient')
+GO
+
+-- Adding new patient records
+EXEC DA_ManagePatientRecords @PName = 'TestNew2'
+-- EXEC DA_ManagePatientRecords @PID = 'P9' ,@PName = 'Ah Meng'
+
+-- Deleting patient records
+EXEC DA_DeletePatientRecords @PID = 'P9'
+
+-- Adding new doctor records
+EXEC DA_ManageDoctorRecords @DName = 'Dr. testNew'
+-- EXEC DA_ManageDoctorRecords @DrID = 'D1' ,@DName = 'Dr. Ali'
+
+-- Deleting doctor records
+EXEC DA_DeleteDoctorRecords @DrID = 'D9'
+
+-- Undo patient
+EXEC DA_UndoPatient
+
+-- Undo doctor
+EXEC DA_UndoDoctor
+
+/* Role user mapping */
+SELECT roles.[name] as role_name, members.[name] as user_name
+FROM sys.database_role_members 
+INNER JOIN sys.database_principals roles 
+ON database_role_members.role_principal_id = roles.principal_id
+INNER JOIN sys.database_principals members 
+ON database_role_members.member_principal_id = members.principal_id
+WHERE roles.name in ('Data_Admin','Doctor','Patient')
+GO
+
+-- Adding new patient records
+EXEC DA_ManagePatientRecords @PName = 'TestNew2'
+-- EXEC DA_ManagePatientRecords @PID = 'P9' ,@PName = 'Ah Meng'
+
+-- Deleting patient records
+EXEC DA_DeletePatientRecords @PID = 'P9'
+
+-- Adding new doctor records
+EXEC DA_ManageDoctorRecords @DName = 'Dr. testNew'
+-- EXEC DA_ManageDoctorRecords @DrID = 'D1' ,@DName = 'Dr. Ali'
+
+-- Deleting doctor records
+EXEC DA_DeleteDoctorRecords @DrID = 'D9'
+
+-- Undo patient
+EXEC DA_UndoPatient
+
+-- Undo doctor
+EXEC DA_UndoDoctor
+
+/* Role user mapping */
+SELECT roles.[name] as role_name, members.[name] as user_name
+FROM sys.database_role_members 
+INNER JOIN sys.database_principals roles 
+ON database_role_members.role_principal_id = roles.principal_id
+INNER JOIN sys.database_principals members 
+ON database_role_members.member_principal_id = members.principal_id
+WHERE roles.name in ('Data_Admin','Doctor','Patient')
+GO
+
+-- Adding new patient records
+EXEC DA_ManagePatientRecords @PName = 'TestNew2'
+-- EXEC DA_ManagePatientRecords @PID = 'P9' ,@PName = 'Ah Meng'
+
+-- Deleting patient records
+EXEC DA_DeletePatientRecords @PID = 'P9'
+
+-- Adding new doctor records
+EXEC DA_ManageDoctorRecords @DName = 'Dr. testNew'
+-- EXEC DA_ManageDoctorRecords @DrID = 'D1' ,@DName = 'Dr. Ali'
+
+-- Deleting doctor records
+EXEC DA_DeleteDoctorRecords @DrID = 'D9'
+
+-- Undo patient
+EXEC DA_UndoPatient
+
+-- Undo doctor
+EXEC DA_UndoDoctor
+
+/* Role user mapping */
+SELECT roles.[name] as role_name, members.[name] as user_name
+FROM sys.database_role_members 
+INNER JOIN sys.database_principals roles 
+ON database_role_members.role_principal_id = roles.principal_id
+INNER JOIN sys.database_principals members 
+ON database_role_members.member_principal_id = members.principal_id
+WHERE roles.name in ('Data_Admin','Doctor','Patient')
+GO
+
+-- Adding new patient records
+EXEC DA_ManagePatientRecords @PName = 'TestNew2'
+-- EXEC DA_ManagePatientRecords @PID = 'P9' ,@PName = 'Ah Meng'
+
+-- Deleting patient records
+EXEC DA_DeletePatientRecords @PID = 'P9'
+
+-- Adding new doctor records
+EXEC DA_ManageDoctorRecords @DName = 'Dr. testNew'
+-- EXEC DA_ManageDoctorRecords @DrID = 'D1' ,@DName = 'Dr. Ali'
+
+-- Deleting doctor records
+EXEC DA_DeleteDoctorRecords @DrID = 'D9'
+
+-- Undo patient
+EXEC DA_UndoPatient
+
+-- Undo doctor
+EXEC DA_UndoDoctor
+
+/* Role user mapping */
+SELECT roles.[name] as role_name, members.[name] as user_name
+FROM sys.database_role_members 
+INNER JOIN sys.database_principals roles 
+ON database_role_members.role_principal_id = roles.principal_id
+INNER JOIN sys.database_principals members 
+ON database_role_members.member_principal_id = members.principal_id
+WHERE roles.name in ('Data_Admin','Doctor','Patient')
+GO
+
+-- Adding new patient records
+EXEC DA_ManagePatientRecords @PName = 'TestNew2'
+-- EXEC DA_ManagePatientRecords @PID = 'P9' ,@PName = 'Ah Meng'
+
+-- Deleting patient records
+EXEC DA_DeletePatientRecords @PID = 'P9'
+
+-- Adding new doctor records
+EXEC DA_ManageDoctorRecords @DName = 'Dr. testNew'
+-- EXEC DA_ManageDoctorRecords @DrID = 'D1' ,@DName = 'Dr. Ali'
+
+-- Deleting doctor records
+EXEC DA_DeleteDoctorRecords @DrID = 'D9'
+
+-- Undo patient
+EXEC DA_UndoPatient
+
+-- Undo doctor
+EXEC DA_UndoDoctor
+
+/* Role user mapping */
+SELECT roles.[name] as role_name, members.[name] as user_name
+FROM sys.database_role_members 
+INNER JOIN sys.database_principals roles 
+ON database_role_members.role_principal_id = roles.principal_id
+INNER JOIN sys.database_principals members 
+ON database_role_members.member_principal_id = members.principal_id
+WHERE roles.name in ('Data_Admin','Doctor','Patient')
+GO
+
+-- Adding new patient records
+EXEC DA_ManagePatientRecords @PName = 'TestNew2'
+-- EXEC DA_ManagePatientRecords @PID = 'P9' ,@PName = 'Ah Meng'
+
+-- Deleting patient records
+EXEC DA_DeletePatientRecords @PID = 'P9'
+
+-- Adding new doctor records
+EXEC DA_ManageDoctorRecords @DName = 'Dr. testNew'
+-- EXEC DA_ManageDoctorRecords @DrID = 'D1' ,@DName = 'Dr. Ali'
+
+-- Deleting doctor records
+EXEC DA_DeleteDoctorRecords @DrID = 'D9'
+
+-- Undo patient
+EXEC DA_UndoPatient
+
+-- Undo doctor
+EXEC DA_UndoDoctor
+
+/* Role user mapping */
+SELECT roles.[name] as role_name, members.[name] as user_name
+FROM sys.database_role_members 
+INNER JOIN sys.database_principals roles 
+ON database_role_members.role_principal_id = roles.principal_id
+INNER JOIN sys.database_principals members 
+ON database_role_members.member_principal_id = members.principal_id
+WHERE roles.name in ('Data_Admin','Doctor','Patient')
+GO
 
 -- Adding new patient records
 EXEC DA_ManagePatientRecords @PName = 'TestNew2'

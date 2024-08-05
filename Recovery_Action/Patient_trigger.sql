@@ -15,7 +15,6 @@ CREATE TABLE.[AuditLog_Patient](
 ) ;
 GO
 
-
 /* Create DML after trigger */
 CREATE OR ALTER TRIGGER [PatientDataChanges]
 ON [Patient]
@@ -40,7 +39,6 @@ ON Patient
 INSTEAD OF DELETE
 AS
 BEGIN
-    -- Update the RowStatus to 0 (indicating soft delete) for the deleted records
     UPDATE Patient
     SET RowStatus = 0
     WHERE PID IN (SELECT PID FROM deleted);
